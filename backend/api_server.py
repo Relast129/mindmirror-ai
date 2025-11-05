@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sys
 import os
+import asyncio
 from dotenv import load_dotenv
 
 # Load environment variables FIRST
@@ -20,6 +21,16 @@ from app import api_login, api_submit, api_history, api_download, api_feedback
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Helper to run async functions in Flask
+def run_async(coro):
+    """Run async function in Flask route"""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
 
 @app.route('/api/login', methods=['POST', 'OPTIONS'])
 def login():
@@ -38,13 +49,20 @@ def submit():
     if request.method == 'OPTIONS':
         return '', 200
     
-    # Get form data
-    session_token = request.form.get('session_token') or request.headers.get('Authorization', '').replace('Bearer ', '')
-    input_type = request.form.get('input_type', 'text')
-    content = request.form.get('content', '')
-    file = request.files.get('file')
+    # Get form data or JSON
+    if request.is_json:
+        data = request.get_json()
+        session_token = data.get('session_token')
+        input_type = data.get('input_type', 'text')
+        text_content = data.get('text_content', '')
+        file_data = None
+    else:
+        session_token = request.form.get('session_token') or request.headers.get('Authorization', '').replace('Bearer ', '')
+        input_type = request.form.get('input_type', 'text')
+        text_content = request.form.get('text_content', '')
+        file_data = request.files.get('file_data')
     
-    result = api_submit(session_token, input_type, content, file)
+    result = run_async(api_submit(session_token, input_type, text_content, file_data))
     return jsonify(result)
 
 @app.route('/api/history', methods=['GET', 'OPTIONS'])
