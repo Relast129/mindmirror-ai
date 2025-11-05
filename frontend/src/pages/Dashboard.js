@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Brain, LogOut, PenTool, Mic, Image, Video, Sparkles,
-  TrendingUp, Calendar, Award, Heart, Menu, X, Moon, Sun
+  TrendingUp, Calendar, Award, Heart, Menu, X
 } from 'lucide-react';
 import TextInput from '../components/TextInput';
 import VoiceInput from '../components/VoiceInput';
@@ -12,8 +12,6 @@ import ReflectionDisplay from '../components/ReflectionDisplay';
 import MoodTimeline from '../components/MoodTimeline';
 import StatsPanel from '../components/StatsPanel';
 import Gallery from '../components/Gallery';
-import { ToastContainer, useToast } from '../components/Toast';
-import { SkeletonStat, SkeletonTimeline, SkeletonGallery } from '../components/LoadingSkeleton';
 import { authAPI, historyAPI } from '../services/gradio-api';
 
 const Dashboard = ({ user, onLogout }) => {
@@ -25,15 +23,8 @@ const Dashboard = ({ user, onLogout }) => {
   const [galleryItems, setGalleryItems] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('input'); // input, timeline, gallery, stats
-  const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const { toasts, addToast, removeToast } = useToast();
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     try {
       // Load history from Gradio backend
       const historyData = await historyAPI.getHistory(50);
@@ -68,7 +59,11 @@ const Dashboard = ({ user, onLogout }) => {
     } catch (error) {
       console.error('Error loading user data:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUserData();
+  }, [loadUserData]);
   
   const calculateStreak = (entries) => {
     // Simple streak calculation

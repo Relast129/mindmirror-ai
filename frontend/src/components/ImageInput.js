@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Image as ImageIcon, Sparkles, X } from 'lucide-react';
+import { Image as ImageIcon, Sparkles, X } from 'lucide-react';
 import { journalAPI } from '../services/gradio-api';
 
 const ImageInput = ({ onReflectionGenerated }) => {

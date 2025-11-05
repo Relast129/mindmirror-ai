@@ -235,10 +235,12 @@ export const feedbackAPI = {
   },
 };
 
-export default {
+const gradioAPI = {
   auth: authAPI,
   journal: journalAPI,
   history: historyAPI,
   file: fileAPI,
   feedback: feedbackAPI,
 };
+
+export default gradioAPI;
