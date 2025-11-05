@@ -1,25 +1,21 @@
 """
-Reflection Generator Module
-Generates empathetic reflections and poetry using LLMs with template fallbacks.
+Reflection Generator Module - Production Ready
+Uses OpenRouter primary with robust fallbacks.
 """
 
 import asyncio
 import logging
 from typing import Dict, Any, Optional
-import requests
-import os
 
-from .model_registry import ModelRegistry
+from .reflection_generator import generate_reflection as generate_reflection_sync
 
 logger = logging.getLogger(__name__)
 
 class ReflectionGenerator:
-    """Generates personalized reflections and poetry."""
+    """Generates personalized reflections using production-ready pipeline."""
     
     def __init__(self):
-        self.hf_token = os.getenv("HUGGINGFACE_HUB_TOKEN")
-        self.models = ModelRegistry.get_models("reflection")
-        self.fallback_config = ModelRegistry.get_fallback_config("reflection")
+        pass  # All configuration is in reflection_generator.py
     
     async def generate(
         self,
@@ -28,7 +24,7 @@ class ReflectionGenerator:
         emotion_scores: Dict[str, float]
     ) -> Dict[str, Any]:
         """
-        Generate reflection, poem, and advice.
+        Generate reflection, poem, and advice using OpenRouter + fallbacks.
         
         Returns:
             {
@@ -39,15 +35,50 @@ class ReflectionGenerator:
                 "fallback": bool
             }
         """
-        # Try models in order
-        for model_config in self.models:
-            try:
-                result = await self._call_model(content, emotion, model_config)
-                if result:
-                    return result
-            except Exception as e:
-                logger.warning(f"Model {model_config['id']} failed: {str(e)}")
-                continue
+        # Build user context from emotion data
+        user_context = {
+            "recent_mood_tags": [emotion] if emotion else [],
+            "emotion_scores": emotion_scores,
+            "language": "en",
+            "sensitivity": "medium"
+        }
+        
+        # Call the production reflection generator (sync function)
+        # Run in executor to avoid blocking
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None,
+            generate_reflection_sync,
+            content,
+            user_context
+        )
+        
+        # Transform to match expected format
+        return {
+            "reflection": result.get("reflection", ""),
+            "poem": result.get("poem_line", ""),
+            "advice": self._format_micro_actions(result.get("micro_actions", [])),
+            "model_used": result.get("model_used", "unknown"),
+            "fallback": result.get("source") != "openrouter",
+            "severity": result.get("severity", "calm"),
+            "tone": result.get("tone", "gentle"),
+            "micro_actions": result.get("micro_actions", []),
+            "explainability": result.get("explainability", ""),
+            "notes": result.get("notes", "")
+        }
+    
+    def _format_micro_actions(self, actions: list) -> str:
+        """Format micro-actions into readable advice text."""
+        if not actions:
+            return "Take a moment to breathe and be present."
+        
+        formatted = []
+        for action in actions:
+            label = action.get("label", "")
+            instruction = action.get("instruction", "")
+            formatted.append(f"{label}: {instruction}")
+        
+        return " | ".join(formatted)
         
         # Fallback to templates
         logger.warning("All reflection models failed, using templates")
