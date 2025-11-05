@@ -152,12 +152,12 @@ git push
 
 ```
 Name: GOOGLE_CLIENT_ID
-Value: 356653662187-dm09nvnch9vsquj8ci37pes3t93tpffc.apps.googleusercontent.com
+Value: YOUR_GOOGLE_CLIENT_ID_HERE
 ```
 
 ```
 Name: GOOGLE_CLIENT_SECRET
-Value: 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
+Value: YOUR_GOOGLE_CLIENT_SECRET_HERE
 ```
 
 ```
@@ -183,7 +183,7 @@ Value: 3600
 
 ```
 Name: HUGGINGFACE_HUB_TOKEN
-Value: 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
+Value: YOUR_HF_TOKEN_HERE
 ```
 
 4. Click **"Save"** after each secret
@@ -234,7 +234,7 @@ Value: https://YOUR_HF_USERNAME-mindmirror-ai.hf.space
 
 ```
 Name: REACT_APP_GOOGLE_CLIENT_ID
-Value: 356653662187-dm09nvnch9vsquj8ci37pes3t93tpffc.apps.googleusercontent.com
+Value: YOUR_GOOGLE_CLIENT_ID_HERE
 ```
 
 ### **3.5 Deploy**

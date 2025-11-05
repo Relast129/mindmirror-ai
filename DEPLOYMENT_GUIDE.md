@@ -135,13 +135,13 @@ git push
 3. Add these secrets:
 
 ```
-GOOGLE_CLIENT_ID = 356653662187-dm09nvnch9vsquj8ci37pes3t93tpffc.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET = 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
+GOOGLE_CLIENT_ID = YOUR_GOOGLE_CLIENT_ID_HERE
+GOOGLE_CLIENT_SECRET = YOUR_GOOGLE_CLIENT_SECRET_HERE
 REDIRECT_URI = https://YOUR_USERNAME-mindmirror-ai.hf.space/callback
 FRONTEND_URL = https://mindmirror-ai.vercel.app
 PORT = 7860
 SESSION_TTL = 3600
-HUGGINGFACE_HUB_TOKEN = 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
+HUGGINGFACE_HUB_TOKEN = YOUR_HF_TOKEN_HERE
 ```
 
 **Important**: Replace `YOUR_USERNAME` with your actual HF username!
@@ -187,7 +187,7 @@ Click **"Environment Variables"** and add:
 
 ```
 REACT_APP_API_URL = https://YOUR_USERNAME-mindmirror-ai.hf.space
-REACT_APP_GOOGLE_CLIENT_ID = 356653662187-dm09nvnch9vsquj8ci37pes3t93tpffc.apps.googleusercontent.com
+REACT_APP_GOOGLE_CLIENT_ID = YOUR_GOOGLE_CLIENT_ID_HERE
 ```
 
 **Important**: Replace `YOUR_USERNAME` with your HF username!

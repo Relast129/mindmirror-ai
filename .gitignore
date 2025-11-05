@@ -42,6 +42,7 @@ build/
 .env
 .env.local
 .env.*.local
+CREDENTIALS_REFERENCE.txt
 
 # IDE
 .vscode/
