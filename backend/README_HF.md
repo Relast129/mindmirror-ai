@@ -3,9 +3,8 @@ title: MindMirror AI
 emoji: 🧠
 colorFrom: purple
 colorTo: blue
-sdk: gradio
-sdk_version: 4.0.0
-app_file: app_hf.py
+sdk: docker
+app_port: 7860
 pinned: false
 license: mit
 ---

@@ -1,5 +1,5 @@
-# MindMirror AI Backend Dockerfile
-FROM python:3.9-slim
+# MindMirror AI Backend - Hugging Face Spaces
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
@@ -21,12 +21,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Expose port
-EXPOSE 8000
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PORT=7860
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+# Expose port for Hugging Face Spaces
+EXPOSE 7860
 
-# Run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the Flask application
+CMD ["python", "app_hf.py"]
